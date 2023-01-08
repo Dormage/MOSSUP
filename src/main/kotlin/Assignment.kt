@@ -5,7 +5,7 @@ class Assignment(
     val studentId: String,
     val folderRoot: File,
     val error: String = "",
-    val enabled: Boolean = true
+    var enabled: Boolean = true
 ) {
 
 }

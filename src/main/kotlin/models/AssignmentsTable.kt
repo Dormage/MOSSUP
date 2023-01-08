@@ -12,6 +12,8 @@ class AssignmentsTable(private val assignment: List<Assignment>) : JTable() {
         colModel.getColumn(0).minWidth = 15
         colModel.getColumn(0).maxWidth = 30
         colModel.getColumn(2).preferredWidth = 40
+        colModel.getColumn(4).minWidth = 50
+        colModel.getColumn(4).maxWidth = 80
     }
 }
 
@@ -37,15 +39,22 @@ class AssignmentTableModel(private val assignment: List<Assignment>) : AbstractT
             }
         }
     }
+    override fun setValueAt(aValue: Any, rowIndex: Int, columnIndex: Int) {
+        if (columnIndex == 4) {
+            assignment[rowIndex].enabled = aValue as Boolean
+        }
+    }
 
     override fun getColumnClass(columnIndex: Int): Class<*>? {
+        return getValueAt(0,columnIndex)::class.java
+        /*
         var type: Class<*> = String::class.java
         when (columnIndex) {
             1, 2, 3 -> return String::class.java
             0 -> return Int::class.java
             4 -> return Boolean::class.java
         }
-        return type
+        return type*/
     }
 
     override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {

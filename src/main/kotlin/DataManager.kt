@@ -53,7 +53,7 @@ class DataManager {
         socketClient.userID = Application.settings.ApiKey
         socketClient.language = Application.settings.language.lowercase(Locale.getDefault())
         socketClient.run()
-        assignments.forEach { assignment ->
+        assignments.filter { it.enabled }.forEach { assignment ->
             val files = FileUtils.listFiles(assignment.folderRoot, arrayOf(socketClient.language), true)
             println(files.size)
             println("Socket status ${socketClient.socket.isConnected}  Stage: ${socketClient.currentStage}")
