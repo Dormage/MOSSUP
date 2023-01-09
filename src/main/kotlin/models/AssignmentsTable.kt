@@ -47,14 +47,6 @@ class AssignmentTableModel(private val assignment: List<Assignment>) : AbstractT
 
     override fun getColumnClass(columnIndex: Int): Class<*>? {
         return getValueAt(0,columnIndex)::class.java
-        /*
-        var type: Class<*> = String::class.java
-        when (columnIndex) {
-            1, 2, 3 -> return String::class.java
-            0 -> return Int::class.java
-            4 -> return Boolean::class.java
-        }
-        return type*/
     }
 
     override fun isCellEditable(rowIndex: Int, columnIndex: Int): Boolean {
