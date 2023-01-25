@@ -19,6 +19,9 @@ dependencies {
     implementation("it.zielke:moji:1.0.1")
     implementation("org.jsoup:jsoup:1.14.3")
     implementation("com.fifesoft:rsyntaxtextarea:3.3.1")
+    implementation("org.apache.poi:poi-excelant:5.2.3")
+    implementation("org.apache.poi:poi-ooxml:3.9")
+
 }
 
 tasks.test {

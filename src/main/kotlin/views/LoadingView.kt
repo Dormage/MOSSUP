@@ -4,10 +4,13 @@ import Application
 import javax.swing.ImageIcon
 import javax.swing.JLabel
 
-class LoadingView(application: Application) : JLabel() {
+class LoadingView(application: Application, size: String = "large") : JLabel() {
     init {
-        icon = ImageIcon("loading_purple.gif")
-        setSize(128, 128)
-        isVisible=true
+        icon = if (size == "large") {
+            ImageIcon("loading_large.gif")
+        } else {
+            ImageIcon("loading_small.gif")
+        }
+        isVisible = true
     }
 }

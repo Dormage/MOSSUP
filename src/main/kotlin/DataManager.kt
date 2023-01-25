@@ -1,4 +1,3 @@
-
 import it.zielke.moji.SocketClient
 import org.apache.commons.io.FileUtils
 import org.jsoup.Jsoup
@@ -8,6 +7,7 @@ import java.io.File
 import java.net.URL
 import java.nio.file.Files
 import java.util.*
+import javax.swing.JProgressBar
 
 
 class DataManager {
@@ -48,7 +48,7 @@ class DataManager {
         }
     }
 
-    public fun submitAssignments(): URL {
+    fun submitAssignments(): URL {
         val socketClient = SocketClient()
         socketClient.userID = Application.settings.ApiKey
         socketClient.language = Application.settings.language.lowercase(Locale.getDefault())
