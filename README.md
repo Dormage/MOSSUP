@@ -39,6 +39,8 @@ MOSSUP assumes the subfolders in Assignments as the Student's name. It recursive
 * Support direct download from Moddle assginment via URL (credentials required)
 * Support manual addition of individual assignments
 * Better code comparison visualisation (row indexed)
+* Anonymisation of students
+* Regex support for renaming assignments 
 * Releases
 
 ### Prerequisites
