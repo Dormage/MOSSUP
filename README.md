@@ -26,7 +26,9 @@ MOSSUP assumes the subfolders in Assignments as the Student's name. It recursive
 * Include/exclude assignments before submitting
 * Submit to Moss
 * Parse global similarity results
+![image](https://user-images.githubusercontent.com/2729743/214973499-47da3e05-cf80-463f-b160-babf712f6d0b.png)
 * Display code comparison between two assignments with highlighted code blocks
+![image](https://user-images.githubusercontent.com/2729743/214973157-d793951b-bc0c-4cd1-9637-d9d529c5b434.png)
 * Export results to xlsx
 * Moss options for changing the key, and selecting target language.
 
