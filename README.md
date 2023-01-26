@@ -5,7 +5,7 @@
 ![gradle-badge]
 
 
-MOSSUP is a cross-platform GUI application for MOSS that aims to simplify interaction with the service. 
+MOSSUP is a cross-platform GUI application for [MOSS](https://theory.stanford.edu/~aiken/moss/#:~:text=What%20is%20Moss%3F,very%20effective%20in%20this%20role.) that aims to simplify interaction with the service. 
 It is primarily being developed within the computer science department at University of Primorska for internal use.
 
 ### Features
