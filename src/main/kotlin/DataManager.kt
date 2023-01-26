@@ -6,8 +6,8 @@ import org.tinyzip.TinyZip
 import java.io.File
 import java.net.URL
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.*
-import javax.swing.JProgressBar
 
 
 class DataManager {
@@ -27,13 +27,6 @@ class DataManager {
             compressed.forEach { file ->
                 try {
                     TinyZip.unzip(file.path, assignmentTmpFolder.path)
-                    assignments.add(
-                        Assignment(
-                            index,
-                            assignmentTmpFolder.name,
-                            assignmentTmpFolder,
-                        )
-                    )
                 } catch (e: Exception) {
                     assignments.add(
                         Assignment(
@@ -45,6 +38,31 @@ class DataManager {
                     )
                 }
             }
+            val sourceFiles: List<File> = assignmentFolder.listFiles().filter { it.toString().endsWith(Application.settings.language.lowercase(
+                Locale.getDefault()
+            )) }
+            sourceFiles.forEach { file ->
+                println("Copying ${file.toPath()} to ${Paths.get(assignmentTmpFolder.toPath().toString(), file.name)}")
+                file.copyTo(Paths.get(assignmentTmpFolder.toPath().toString(), file.name).toFile())
+            }
+            if(compressed.isNotEmpty() || sourceFiles.isNotEmpty()) {
+                assignments.add(
+                    Assignment(
+                        index,
+                        assignmentTmpFolder.name,
+                        assignmentTmpFolder,
+                    )
+                )
+            }else{
+                assignments.add(
+                    Assignment(
+                        index,
+                        assignmentTmpFolder.name,
+                        assignmentTmpFolder,
+                        "No source files found!"
+                    )
+                )
+            }
         }
     }
 
@@ -53,19 +71,20 @@ class DataManager {
         socketClient.userID = Application.settings.ApiKey
         socketClient.language = Application.settings.language.lowercase(Locale.getDefault())
         socketClient.run()
-        assignments.filter { it.enabled }.forEach { assignment ->
-            val files = FileUtils.listFiles(assignment.folderRoot, arrayOf(socketClient.language), true)
-            println(files.size)
-            println("Socket status ${socketClient.socket.isConnected}  Stage: ${socketClient.currentStage}")
+            assignments.filter { it.enabled && it.error.isEmpty() }.forEach { assignment ->
+                println(assignment.folderRoot)
+                val files = FileUtils.listFiles(assignment.folderRoot, arrayOf(socketClient.language), true)
+                println(files.size)
+                println("Socket status ${socketClient.socket.isConnected}  Stage: ${socketClient.currentStage}")
 
-            files.forEach { it ->
-                val newData = it.readText().replace("[^\\x00-\\x7F]+".toRegex(), "")
-                //val submissionFile = File(assignment.folderRoot, it.name).also { it.writeText(newData) }
-                it.writeText(newData)
-                socketClient.uploadFile(it)
-                println("Uploading ${it.absolutePath}")
+                files.forEach { it ->
+                    val newData = it.readText().replace("[^\\x00-\\x7F]+".toRegex(), "")
+                    //val submissionFile = File(assignment.folderRoot, it.name).also { it.writeText(newData) }
+                    it.writeText(newData)
+                    socketClient.uploadFile(it)
+                    println("Uploading ${it.absolutePath}")
+                }
             }
-        }
         Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (socketClient.currentStage == it.zielke.moji.Stage.AWAITING_END) {
