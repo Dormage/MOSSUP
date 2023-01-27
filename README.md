@@ -1,3 +1,30 @@
+<div align="center">
+<h1>MOSSUP</h1>
+    <a href="#">
+        <img alt="Commit Activity" src="https://img.shields.io/github/commit-activity/m/Dormage/MOSSUP?color=e"/>
+    </a>
+    <br>
+    <a href="#">
+        <img alt="PR" src="https://img.shields.io/github/issues-pr/Dormage/MOSSUP?color=%235352ed"/>
+    </a>
+    <br>
+    <a href="#">
+        <img alt="Issues" src="https://img.shields.io/github/issues/Dormage/MOSSUP?color=violet"/>
+    </a>
+    <br>
+    <a href="#">
+        <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-green"/>
+    </a>
+    <br>
+    <a href="#">
+        <img alt="LOC" src="https://img.shields.io/tokei/lines/github/Dormage/MOSSUP?label=LOC"/>
+    </a>
+    <br>
+    <a href="#">
+        <img alt="Stars" src="https://img.shields.io/github/stars/Dormage/MOSSUP?color=%23a29bfe"/>
+    </a>
+</div>
+
 [kotlin-badge]: https://img.shields.io/badge/Kotlin-0095D5?logo=kotlin&logoColor=white
 [gradle-badge]: https://img.shields.io/badge/gradle-02303A?logo=gradle&logoColor=white
 ## MOSSUP
