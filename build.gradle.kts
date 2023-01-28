@@ -21,6 +21,7 @@ dependencies {
     implementation("com.fifesoft:rsyntaxtextarea:3.3.1")
     implementation("org.apache.poi:poi-excelant:5.2.3")
     implementation("org.apache.poi:poi-ooxml:3.9")
+    implementation("org.xerial:sqlite-jdbc:3.40.0.0")
 
 }
 

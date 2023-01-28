@@ -10,7 +10,7 @@ import java.nio.file.Paths
 import java.util.*
 
 
-class DataManager {
+class DataManager (private val database: Database){
     var assignments = mutableListOf<Assignment>()
     var similarityResults = mutableMapOf<Pair<Assignment, Assignment>, Similarity>()
 
@@ -23,46 +23,23 @@ class DataManager {
             val assignmentTmpFolder = File(tempDirectory, assignmentFolder.name.replace("\\s".toRegex(), ""))
             println(assignmentTmpFolder)
             val compressed: List<File> = assignmentFolder.listFiles().filter { it.toString().endsWith(".zip") }
+            val sourceFiles: List<File> = assignmentFolder.listFiles().filter {
+                it.toString().endsWith(Application.settings.language.lowercase(Locale.getDefault()))
+            }
+            val assignment = Assignment(index, assignmentTmpFolder.name, assignmentTmpFolder)
             //TODO: Support other compression standards and uncompressed submissions
             compressed.forEach { file ->
                 try {
                     TinyZip.unzip(file.path, assignmentTmpFolder.path)
                 } catch (e: Exception) {
-                    assignments.add(
-                        Assignment(
-                            index,
-                            assignmentTmpFolder.name,
-                            assignmentTmpFolder,
-                            e.message ?: "Error"
-                        )
-                    )
+                    assignment.error = "Error uncompressing assignment"
                 }
             }
-            val sourceFiles: List<File> = assignmentFolder.listFiles().filter { it.toString().endsWith(Application.settings.language.lowercase(
-                Locale.getDefault()
-            )) }
-            sourceFiles.forEach { file ->
-                println("Copying ${file.toPath()} to ${Paths.get(assignmentTmpFolder.toPath().toString(), file.name)}")
-                file.copyTo(Paths.get(assignmentTmpFolder.toPath().toString(), file.name).toFile())
+            sourceFiles.forEach { file -> file.copyTo(Paths.get(assignmentTmpFolder.toPath().toString(), file.name).toFile()) }
+            if (compressed.isEmpty() && sourceFiles.isEmpty()) {
+                assignment.error = "No source files found"
             }
-            if(compressed.isNotEmpty() || sourceFiles.isNotEmpty()) {
-                assignments.add(
-                    Assignment(
-                        index,
-                        assignmentTmpFolder.name,
-                        assignmentTmpFolder,
-                    )
-                )
-            }else{
-                assignments.add(
-                    Assignment(
-                        index,
-                        assignmentTmpFolder.name,
-                        assignmentTmpFolder,
-                        "No source files found!"
-                    )
-                )
-            }
+            assignments.add(assignment)
         }
     }
 
@@ -71,20 +48,16 @@ class DataManager {
         socketClient.userID = Application.settings.ApiKey
         socketClient.language = Application.settings.language.lowercase(Locale.getDefault())
         socketClient.run()
-            assignments.filter { it.enabled && it.error.isEmpty() }.forEach { assignment ->
-                println(assignment.folderRoot)
-                val files = FileUtils.listFiles(assignment.folderRoot, arrayOf(socketClient.language), true)
-                println(files.size)
-                println("Socket status ${socketClient.socket.isConnected}  Stage: ${socketClient.currentStage}")
-
-                files.forEach { it ->
-                    val newData = it.readText().replace("[^\\x00-\\x7F]+".toRegex(), "")
-                    //val submissionFile = File(assignment.folderRoot, it.name).also { it.writeText(newData) }
-                    it.writeText(newData)
-                    socketClient.uploadFile(it)
-                    println("Uploading ${it.absolutePath}")
-                }
+        assignments.filter { it.enabled && it.error.isEmpty() }.forEach { assignment ->
+            val files = FileUtils.listFiles(assignment.folderRoot, arrayOf(socketClient.language), true)
+            println("Socket status ${socketClient.socket.isConnected}  Stage: ${socketClient.currentStage}")
+            files.forEach { it ->
+                val newData = it.readText().replace("[^\\x00-\\x7F]+".toRegex(), "")
+                it.writeText(newData)
+                socketClient.uploadFile(it)
+                println("Uploading ${it.absolutePath}")
             }
+        }
         Timer().scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 if (socketClient.currentStage == it.zielke.moji.Stage.AWAITING_END) {
@@ -112,12 +85,8 @@ class DataManager {
             val linkB: String = second.select("A").attr("href")
             val similarityB: Int = submissionB.substring(submissionB.indexOf("(") + 1).replace("%)", "").toInt()
             val linesMatched: Int = it.select("td")[2].html().toInt()
-            val assignmentA =
-                assignments.find { student -> submissionA.split(" ")[0].contains(student.folderRoot.toString()) }
-                    ?: return@forEach
-            val assignmentB =
-                assignments.find { student -> submissionB.split(" ")[0].contains(student.folderRoot.toString()) }
-                    ?: return@forEach
+            val assignmentA = assignments.find { student -> submissionA.split(" ")[0].contains(student.folderRoot.toString()) } ?: return@forEach
+            val assignmentB = assignments.find { student -> submissionB.split(" ")[0].contains(student.folderRoot.toString()) } ?: return@forEach
             results[Pair(assignmentA, assignmentB)] = Similarity(similarityA, similarityB, linesMatched, linkA)
         }
         println(results.size)

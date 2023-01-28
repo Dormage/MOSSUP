@@ -20,6 +20,8 @@ fun main(args: Array<String>) {
         JFrame.setDefaultLookAndFeelDecorated( true );
         JDialog.setDefaultLookAndFeelDecorated( true );
     }
-    val dataManager = DataManager()
+    val database = Database()
+    val dataManager = DataManager(database)
     val application = Application(dataManager)
+
 }
