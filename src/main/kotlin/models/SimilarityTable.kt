@@ -4,6 +4,7 @@ import Application
 import Assignment
 import DataManager
 import workers.LoadCodeCompare
+import javax.swing.JButton
 import javax.swing.JTable
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.TableColumnModel
@@ -35,7 +36,7 @@ class SimilarityTableModel(private val similarity: Map<Pair<Assignment, Assignme
     }
 
     override fun getColumnCount(): Int {
-        return 5
+        return 6
     }
 
     override fun getValueAt(rowIndex: Int, columnIndex: Int): Any {
@@ -47,6 +48,7 @@ class SimilarityTableModel(private val similarity: Map<Pair<Assignment, Assignme
             2 -> pair.second.folderRoot
             3 -> "${similarity.similarityB} %"
             4 -> similarity.linesMatched
+            5 -> JButton("Compare")
             else -> {
                 "??"
             }
@@ -58,12 +60,7 @@ class SimilarityTableModel(private val similarity: Map<Pair<Assignment, Assignme
     }
 
     override fun getColumnClass(columnIndex: Int): Class<*>? {
-        var type: Class<*> = String::class.java
-        when (columnIndex) {
-            1, 2 -> type = String::class.java
-            0, 3, 4 -> type = Int::class.java
-        }
-        return type
+        return getValueAt(0,columnIndex)::class.java
     }
 
     override fun getColumnName(column: Int): String? {
@@ -73,6 +70,7 @@ class SimilarityTableModel(private val similarity: Map<Pair<Assignment, Assignme
             2 -> "Assignment B"
             3 -> "Percentage B"
             4 -> "Lines Matched"
+            5 -> "Action"
             else -> {
                 "??"
             }

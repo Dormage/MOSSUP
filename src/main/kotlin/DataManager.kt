@@ -10,7 +10,7 @@ import java.nio.file.Paths
 import java.util.*
 
 
-class DataManager (private val database: Database){
+class DataManager(private val database: Database) {
     var assignments = mutableListOf<Assignment>()
     var similarityResults = mutableMapOf<Pair<Assignment, Assignment>, Similarity>()
 
@@ -117,5 +117,13 @@ class DataManager (private val database: Database){
         var codeA: String = "",
         var codeB: String = "",
         var matched: MutableList<IntRange> = mutableListOf()
+    )
+
+    data class MOSS(
+        val id: Int,
+        val url: String,
+        val html: String,
+        val itemCount: Int,
+        val timestamp: Long
     )
 }
